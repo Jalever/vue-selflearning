@@ -46,6 +46,10 @@ export function proxy (target: Object, sourceKey: string, key: string) {
 }
 
 export function initState (vm: Component) {
+  console.warn('vm');
+  console.log(vm);
+  console.log('\n');
+  
   vm._watchers = []
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props)

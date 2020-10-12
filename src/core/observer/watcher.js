@@ -44,16 +44,19 @@ export default class Watcher {
 
   constructor (
     vm: Component,
-    expOrFn: string | Function,
+    expOrFn: string | Function,// 是一个表达式还是一个 fn
     cb: Function,
-    options?: ?Object,
-    isRenderWatcher?: boolean
+    options?: ?Object,// 配置
+    isRenderWatcher?: boolean // 是否是一个渲染watcher
   ) {
     this.vm = vm
     if (isRenderWatcher) {
       vm._watcher = this
     }
+
+    // 然后将Vue 实例push到 _watchers中， 在initState中 vm._watchers = []
     vm._watchers.push(this)
+
     // options
     if (options) {
       this.deep = !!options.deep
@@ -64,6 +67,7 @@ export default class Watcher {
     } else {
       this.deep = this.user = this.lazy = this.sync = false
     }
+
     this.cb = cb
     this.id = ++uid // uid for batching
     this.active = true
@@ -75,6 +79,7 @@ export default class Watcher {
     this.expression = process.env.NODE_ENV !== 'production'
       ? expOrFn.toString()
       : ''
+    
     // parse expression for getter
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
