@@ -23,7 +23,7 @@ export let activeInstance: any = null;
 export let isUpdatingChildComponent: boolean = false;
 
 /**
- * 
+ *
  * 把之前的实例对象存起来，再设置成最新调用update的实例。在patch完后就恢复原来的实例
  */
 export function setActiveInstance(vm: Component) {
@@ -115,7 +115,6 @@ export function lifecycleMixin(Vue: Class<Component>) {
 
     restoreActiveInstance();
 
-    
     // 更新__vue__属性的引用
     // update __vue__ reference
     // 如果存在旧元素则设置它的__vue__引用为null
@@ -163,12 +162,12 @@ export function lifecycleMixin(Vue: Class<Component>) {
 
     // remove self from parent
     const parent = vm.$parent;
-    
+
     // 如果非抽象父级组件存在且没有在销毁中，则从父组件中移除实例
     if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
       remove(parent.$children, vm);
     }
-    
+
     // 销毁所有观察器
     // teardown watchers
     if (vm._watcher) {
@@ -178,7 +177,7 @@ export function lifecycleMixin(Vue: Class<Component>) {
     while (i--) {
       vm._watchers[i].teardown();
     }
-    
+
     // 移除对象引用
     // remove reference from data ob
     // frozen object may not have observer.
@@ -276,7 +275,6 @@ export function mountComponent(
     };
   } else {
     updateComponent = () => {
-      
       // vm._render() 方法渲染出来一个 VNode
       // hydrating 跟服务端渲染相关，如果没有启用的话，其为 false
       // 当收集好了依赖之后，会通过 Watcher 的 this.getter(vm, vm) 来调用 updateComponent() 方法
@@ -454,15 +452,23 @@ export function deactivateChildComponent(vm: Component, direct?: boolean) {
 export function callHook(vm: Component, hook: string) {
   // #7573 disable dep collection when invoking lifecycle hooks
   pushTarget();
+
   const handlers = vm.$options[hook];
   const info = `${hook} hook`;
+
   if (handlers) {
     for (let i = 0, j = handlers.length; i < j; i++) {
       invokeWithErrorHandling(handlers[i], vm, null, vm, info);
     }
   }
+
+  /**
+   * Vue.prototype.$on中有关联
+   * 当前实例的钩子函数如果是通过父组件的:hook方式来指定的，那么它在执行钩子函数的回调方法时就是直接触发vm.$emit来执行。（这种方式类似于dom中的addEventListener监听事件和dispatchEvent触发事件）
+   */
   if (vm._hasHookEvent) {
     vm.$emit("hook:" + hook);
   }
+  
   popTarget();
 }

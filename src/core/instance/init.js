@@ -27,26 +27,35 @@ export function initMixin (Vue: Class<Component>) {
     }
 
     // a flag to avoid this being observed
+    //如果传入值的_isVue为ture时(即传入的值是Vue实例本身)不会新建observer实例(这里可以暂时理解新建observer实例就是让数据响应式)
     vm._isVue = true
+    
     // merge options
     if (options && options._isComponent) {
+      // 当前这个Vue实例是组件。则执行initInternalComponent方法。(该方法主要就是为vm.$options添加一些属性
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.
       initInternalComponent(vm, options)
     } else {
+      // 当前Vue实例不是组件。而是实例化Vue对象时，调用mergeOptions方法
+
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
         vm
       )
     }
+
+
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
       initProxy(vm)
     } else {
       vm._renderProxy = vm
     }
+
+
     // expose real self
     vm._self = vm
 
