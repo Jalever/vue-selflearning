@@ -20,6 +20,10 @@ import {
 
 // activeInstance:当前Vue或者组件实例，作为一个全局变量，主要维护组件树对应的实例对象的父子关系
 export let activeInstance: any = null;
+
+/**
+ * 在render.js文件中定义$attrs和$listeners时，判断是否需要提示$attrs和$listeners是否是只读属性
+ */
 export let isUpdatingChildComponent: boolean = false;
 
 /**
@@ -274,6 +278,7 @@ export function mountComponent(
       measure(`vue ${name} patch`, startTag, endTag);
     };
   } else {
+    // updateComponent 其实是先调用 vm._render 生成 VNode，最终调用 vm._update 更新 DOM
     updateComponent = () => {
       // vm._render() 方法渲染出来一个 VNode
       // hydrating 跟服务端渲染相关，如果没有启用的话，其为 false

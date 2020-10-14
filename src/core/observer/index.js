@@ -131,6 +131,22 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 
 /**
  * Define a reactive property on an Object.
+ * 例子：
+ * defineReactive(
+    vm,
+    "$attrs",
+    (parentData && parentData.attrs) || emptyObject,
+    null,
+    true
+  );
+
+  defineReactive(
+    vm,
+    "$listeners",
+    options._parentListeners || emptyObject,
+    null,
+    true
+  );
  */
 export function defineReactive (
   obj: Object,
@@ -142,9 +158,7 @@ export function defineReactive (
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
-  if (property && property.configurable === false) {
-    return
-  }
+  if (property && property.configurable === false) {return}
 
   // cater for pre-defined getter/setters
   const getter = property && property.get
@@ -154,6 +168,7 @@ export function defineReactive (
   }
 
   let childOb = !shallow && observe(val)
+  
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,

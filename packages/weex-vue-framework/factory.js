@@ -3712,7 +3712,8 @@ function renderMixin (Vue) {
   Vue.prototype.$nextTick = function (fn) {
     return nextTick(fn, this)
   };
-
+  
+  // vm._render 最终是通过执行 createElement 方法并返回的是 vnode
   Vue.prototype._render = function () {
     var vm = this;
     var ref = vm.$options;
